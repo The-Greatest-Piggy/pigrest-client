@@ -70,3 +70,9 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+@layer components {
+  .color-delay {
+    @apply transition hover:duration-500;
+  }
+}
