@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import GNB from "@/components/custom/navigation/GNB";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -13,7 +14,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className="w-screen h-screen p-4">
+        <GNB />
+        <div>
+          <main>{children}</main>
+        </div>
+      </body>
     </html>
   );
 }

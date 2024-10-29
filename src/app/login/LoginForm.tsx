@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   userId: z.string().min(2, {
@@ -25,6 +26,7 @@ const formSchema = z.object({
 });
 
 export function LoginForm() {
+  const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -35,6 +37,7 @@ export function LoginForm() {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
+    router.push("/");
   }
   return (
     <Form {...form}>
@@ -71,6 +74,7 @@ export function LoginForm() {
                   <Input
                     className="h-12 w-full rounded-xl"
                     placeholder="비밀번호를 입력해 주세요."
+                    type="password"
                     {...field}
                   />
                 </FormControl>

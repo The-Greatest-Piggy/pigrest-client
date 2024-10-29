@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   userId: z.string().min(2, {
@@ -32,6 +33,8 @@ const formSchema = z.object({
 });
 
 export function RegisterForm() {
+  const router = useRouter();
+
   // FIXME: 유효성 검사 구현 필요
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -46,6 +49,7 @@ export function RegisterForm() {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
+    router.push("/login");
   }
 
   return (
@@ -83,6 +87,7 @@ export function RegisterForm() {
                   <Input
                     className="h-12 w-full rounded-xl"
                     placeholder="비밀번호를 입력해 주세요."
+                    type="password"
                     {...field}
                   />
                 </FormControl>
@@ -99,6 +104,7 @@ export function RegisterForm() {
                   <Input
                     className="h-12 w-full rounded-xl"
                     placeholder="비밀번호를 다시 한번 입력해 주세요."
+                    type="password"
                     {...field}
                   />
                 </FormControl>
@@ -114,7 +120,7 @@ export function RegisterForm() {
                 <FormControl>
                   <Input
                     className="h-12 w-full rounded-xl"
-                    placeholder="비밀번호를 입력해 주세요."
+                    placeholder="닉네임을 입력해 주세요."
                     {...field}
                   />
                 </FormControl>
