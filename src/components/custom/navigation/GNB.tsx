@@ -14,29 +14,33 @@ import { useRouter } from "next/navigation";
 export default function GNB() {
   const router = useRouter();
   return (
-    <div className="flex w-full items-center justify-around my-4">
+    <div className="flex w-full items-center justify-around  my-4">
       {/* logo */}
-      <Image
-        src={"/logo.svg"}
-        alt={"logo"}
-        width={"36"}
-        height={"36"}
-        className="hover:cursor-pointer"
-        onClick={() => router.push("/")}
-      />
-      {/* search bar */}
-      {/* // FIXME: 진짜 서치바로 할지 아니면 다른걸로 할지 고민 */}
-      <Input className="w-[90%]" type="text" placeholder="to be continue.." />
-      {/* profile */}
-      {/* // FIXME: 로그인이 되어있는 경우 마이페이지로 이동, 안되어있으면 로그인
+      <div className="flex w-16 justify-center">
+        <Image
+          src={"/logo.svg"}
+          alt={"logo"}
+          width={"36"}
+          height={"36"}
+          className="hover:cursor-pointer"
+          onClick={() => router.push("/")}
+        />
+      </div>
+      <div className="flex w-[95%] justify-between items-center">
+        {/* search bar */}
+        {/* // FIXME: 진짜 서치바로 할지 아니면 다른걸로 할지 고민 */}
+        <Input className="w-[96%]" type="text" placeholder="to be continue.." />
+        {/* profile */}
+        {/* // FIXME: 로그인이 되어있는 경우 마이페이지로 이동, 안되어있으면 로그인
       페이지로 이동 */}
-      <Avatar
-        className="hover:cursor-pointer"
-        onClick={() => router.push("/mypage")}
-      >
-        <AvatarImage src="https://github.com/shadcn.png" alt="profileImg" />
-        <AvatarFallback>P</AvatarFallback>
-      </Avatar>
+        <Avatar
+          className="hover:cursor-pointer"
+          onClick={() => router.push("/mypage")}
+        >
+          <AvatarImage src="https://github.com/shadcn.png" alt="profileImg" />
+          <AvatarFallback>P</AvatarFallback>
+        </Avatar>
+      </div>
     </div>
   );
 }

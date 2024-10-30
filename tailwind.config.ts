@@ -12,6 +12,7 @@ const config: Config = {
       colors: {
         main: "#EB4FAB",
         sub1: "#60BAAD",
+        sub2: "#F1F1F1",
         font1: "#333333",
         font2: "#525252",
         background: "hsl(var(--background))",
