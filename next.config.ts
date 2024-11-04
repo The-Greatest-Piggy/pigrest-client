@@ -19,6 +19,15 @@ const nextConfig: NextConfig = {
         port: "",
         pathname: "/egjs-infinitegrid/assets/image/**",
       },
+      {
+        protocol: "https",
+        hostname: "github.com",
+        port: "",
+      },
+      {
+        hostname: "via.placeholder.com",
+        port: "",
+      },
     ],
   },
 };

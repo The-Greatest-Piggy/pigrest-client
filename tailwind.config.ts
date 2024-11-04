@@ -13,6 +13,7 @@ const config: Config = {
         main: "#EB4FAB",
         sub1: "#60BAAD",
         sub2: "#F1F1F1",
+        sub3: "#F0AECE",
         font1: "#333333",
         font2: "#525252",
         background: "hsl(var(--background))",

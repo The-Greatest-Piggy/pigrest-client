@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { MasonryInfiniteGrid } from "@egjs/react-infinitegrid";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export type TGetItems = {
   nextGroupKey: number;
@@ -21,10 +22,15 @@ function getItems({ nextGroupKey, count }: TGetItems) {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Item = ({ num }: any) => {
+  const router = useRouter();
+
   return (
     <div className="inline-block w-[280px]">
-      <div className="overflow-hidden rounded-xl">
+      <div className="overflow-hidden rounded-xl hover:cursor-pointer">
         <Image
+          onClick={() => {
+            router.push(`/collections/${num}`);
+          }}
           src={`https://naver.github.io/egjs-infinitegrid/assets/image/${
             (num % 33) + 1
           }.jpg`}
@@ -37,7 +43,7 @@ const Item = ({ num }: any) => {
   );
 };
 
-export default function Home() {
+export default function HomePage() {
   const [items, setItems] = useState(() =>
     getItems({ nextGroupKey: 0, count: 10 })
   );

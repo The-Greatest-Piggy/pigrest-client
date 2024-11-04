@@ -1,6 +1,6 @@
 import { RegisterForm } from "./RegisterForm";
 
-export default function LoginPage() {
+export default function RegisterPage() {
   return (
     <div className="flex justify-center items-center min-h-screen">
       <RegisterForm />
