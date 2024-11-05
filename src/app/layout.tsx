@@ -19,7 +19,7 @@ export default function RootLayout({
         <GNB />
         <div className="flex w-full justify-around">
           <SNB />
-          <main className="w-[95%]">{children}</main>
+          <main className="w-[95%] px-2">{children}</main>
         </div>
       </body>
     </html>

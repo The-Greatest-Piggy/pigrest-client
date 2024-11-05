@@ -15,7 +15,7 @@ export default function CollectionLayout({
     router.back();
   };
   return (
-    <section className="px-2 pb-10">
+    <section className="pb-10">
       <div className="py-4">
         <button
           type="button"

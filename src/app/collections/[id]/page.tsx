@@ -19,32 +19,34 @@ export default function CollectionDetailPage() {
   return (
     <div className="container flex gap-16 w-2/3">
       {/* 좌측: 이미지, 좋아요, 사진 저장 */}
-      <div className="flex flex-col items-center gap-7 w-5/12">
-        <Image
-          className="rounded-xl"
-          src={image.imgurl}
-          alt={image.title}
-          width={image.width}
-          height={image.height}
-        />
-        <div className="flex justify-between w-full px-2 items-center">
-          {/* 좋아요 */}
-          <div className="flex gap-2 items-center">
-            <button type="button" onClick={handleChangeLike}>
-              <Heart
-                stroke={!isLiked ? "#F0AECE" : "#EB4FAB"}
-                fill={!isLiked ? "none" : "#EB4FAB"}
-              />
-            </button>
-            <p className="font-bold">{image.likes}</p>
+      <div className="flex flex-col items-center w-5/12">
+        <div className="space-y-7">
+          <Image
+            className="rounded-xl"
+            src={image.imgurl}
+            alt={image.title}
+            width={image.width}
+            height={image.height}
+          />
+          <div className="flex justify-between w-full px-2 items-center">
+            {/* 좋아요 */}
+            <div className="flex gap-2 items-center">
+              <button type="button" onClick={handleChangeLike}>
+                <Heart
+                  stroke={!isLiked ? "#F0AECE" : "#EB4FAB"}
+                  fill={!isLiked ? "none" : "#EB4FAB"}
+                />
+              </button>
+              <p className="font-bold">{image.likes}</p>
+            </div>
+            {/* 사진 저장 */}
+            <Button
+              variant={"outline"}
+              className="h-10 w-28 border-[3px] border-sub3 rounded-xl font-bold"
+            >
+              저장하기
+            </Button>
           </div>
-          {/* 사진 저장 */}
-          <Button
-            variant={"outline"}
-            className="h-10 w-28 border-[3px] border-sub3 rounded-xl font-bold"
-          >
-            저장하기
-          </Button>
         </div>
       </div>
       {/* 우측: 게시자, 사진 설명, 댓글 */}
