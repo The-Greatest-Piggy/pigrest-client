@@ -7,7 +7,10 @@ export const COLLECTION_DETAIL: TCollectionDetail = {
     width: 418,
     height: 470,
     title: "닦아주고싶은 돼지",
-    description: "쓱싹",
+    // description:
+    //   "쓱싹",
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec maximus arcu eu odio pulvinar congue. Vestibulum quis enim eros. Nunc fringilla, enim molestie aliquam cursus, nibh diam elementum ligula, hendrerit ornare felis odio sit amet ipsum. Mauris bibendum diam risus, sollicitudin euismod magna rhoncus ac. Duis tincidunt aliquet sapien, at ultricies massa sagittis eu. Integer faucibus quam aliquam, ultricies diam in, molestie felis. Nam dapibus tristique pulvinar. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.",
     collections: [],
     tags: ["pig", "cute", "nyam"],
     comments: [],
