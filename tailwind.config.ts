@@ -14,8 +14,10 @@ const config: Config = {
         sub1: "#60BAAD",
         sub2: "#F1F1F1",
         sub3: "#F0AECE",
+        sub4: "#E9E9E9",
         font1: "#333333",
         font2: "#525252",
+        font3: "#757575",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {
@@ -61,6 +63,9 @@ const config: Config = {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+      },
+      fontFamily: {
+        pretendard: ["var(--font-pretendard)"],
       },
     },
   },
