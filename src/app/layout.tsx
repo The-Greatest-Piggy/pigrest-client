@@ -2,6 +2,48 @@ import type { Metadata } from "next";
 import "./globals.css";
 import GNB from "@/components/custom/navigation/GNB";
 import SNB from "@/components/custom/navigation/SNB";
+import localFont from "next/font/local";
+
+const pretendard = localFont({
+  src: [
+    {
+      path: "../../public/fonts/Pretendard-Thin.woff",
+      weight: "100",
+    },
+    {
+      path: "../../public/fonts/Pretendard-ExtraLight.woff",
+      weight: "200",
+    },
+    {
+      path: "../../public/fonts/Pretendard-Light.woff",
+      weight: "300",
+    },
+    {
+      path: "../../public/fonts/Pretendard-Regular.woff",
+      weight: "400",
+    },
+    {
+      path: "../../public/fonts/Pretendard-Medium.woff",
+      weight: "500",
+    },
+    {
+      path: "../../public/fonts/Pretendard-SemiBold.woff",
+      weight: "600",
+    },
+    {
+      path: "../../public/fonts/Pretendard-Bold.woff",
+      weight: "700",
+    },
+    {
+      path: "../../public/fonts/Pretendard-ExtraBold.woff",
+      weight: "800",
+    },
+    {
+      path: "../../public/fonts/Pretendard-Black.woff",
+      weight: "900",
+    },
+  ],
+});
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -15,7 +57,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="w-screen h-screen p-4">
+      <body className={`w-full min-h-screen p-4 ${pretendard.className}`}>
         <GNB />
         <div className="flex w-full justify-around">
           <SNB />

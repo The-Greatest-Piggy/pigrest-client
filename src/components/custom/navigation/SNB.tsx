@@ -6,23 +6,58 @@
 
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
+import {
+  NavigationMenu,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  navigationMenuTriggerStyle,
+} from "@/components/ui/navigation-menu";
+import Link from "next/link";
+import clsx from "clsx";
+import { usePathname } from "next/navigation";
+
+const links = [
+  {
+    name: "HOME",
+    href: "/",
+  },
+  {
+    name: "POST",
+    href: "/post",
+  },
+  {
+    name: "NOTI",
+    href: "/noti",
+  },
+  {
+    name: "CHAT",
+    href: "/chat",
+  },
+];
 
 export default function SNB() {
-  const router = useRouter();
+  const pathname = usePathname();
+  console.log(pathname);
   return (
-    <div>
-      <div className="flex flex-col w-16 bg-sub2 rounded-lg py-5 gap-2">
-        <Button variant="link" onClick={() => router.push("/")}>
-          Home
-        </Button>
-        <Button variant="link" onClick={() => router.push("/post")}>
-          Post
-        </Button>
-        <Button variant="link">Noti</Button>
-        <Button variant="link">Talk</Button>
-      </div>
-    </div>
+    <NavigationMenu className="h-fit">
+      <NavigationMenuList className="flex flex-col space-y-3">
+        {links.map((link) => (
+          <NavigationMenuItem key={link.name}>
+            <Link
+              href={link.href}
+              className={clsx(
+                `${navigationMenuTriggerStyle()} hover:font-semibold hover:text-main`,
+                {
+                  "font-semibold text-sub1": pathname === link.href,
+                }
+              )}
+            >
+              {link.name}
+            </Link>
+          </NavigationMenuItem>
+        ))}
+      </NavigationMenuList>
+    </NavigationMenu>
   );
 }
