@@ -7,10 +7,11 @@ export function MyCollections() {
     <div className="w-[calc(100%-20px)]">
       <Tabs defaultValue="saved">
         <TabsList>
-          <TabsTrigger value="created">생성됨</TabsTrigger>
           <TabsTrigger value="saved">저장됨</TabsTrigger>
+          <TabsTrigger value="created">생성됨</TabsTrigger>
         </TabsList>
-        <TabsContent value="created"></TabsContent>
+
+        {/* 저장됨 */}
         <TabsContent value="saved">
           {/* 필터, 새 컬렉션 생성 */}
           <div className="flex items-center justify-between">
@@ -26,6 +27,9 @@ export function MyCollections() {
             <StackedAlbums />
           </div>
         </TabsContent>
+
+        {/* 생성됨 */}
+        <TabsContent value="created"></TabsContent>
       </Tabs>
     </div>
   );
