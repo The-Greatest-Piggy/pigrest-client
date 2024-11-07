@@ -26,3 +26,5 @@ export type TCollectionDetail = {
 };
 
 export type TMyPageCollections = TCollectionDetail[];
+
+export type TTabValue = "saved" | "created";

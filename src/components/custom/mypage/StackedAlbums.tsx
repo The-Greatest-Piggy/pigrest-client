@@ -21,8 +21,8 @@ export function StackedAlbums() {
   const combinedData = [...data, ...emptyData];
 
   return (
-    <div>
-      <div className="relative">
+    <div className="relative pb-10">
+      <div className="relative h-40">
         {combinedData.slice(0, 4).map((info, idx) => (
           <Card
             key={`image-${idx}`}
@@ -45,7 +45,12 @@ export function StackedAlbums() {
           </Card>
         ))}
       </div>
-      <div>dddldldl</div>
+      <div className="absolute left-0 -bottom-8">
+        <p className="font-bold text-2xl">모든 돼지</p>
+        <p>
+          핀 <span>{currentCount}</span>개
+        </p>
+      </div>
     </div>
   );
 }

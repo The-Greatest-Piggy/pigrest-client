@@ -1,36 +1,43 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { SlidersHorizontal, FolderPlus } from "lucide-react";
-import { StackedAlbums } from "./StackedAlbums";
+"use client";
+
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import MyCollectionsTabContent from "./MyCollectionsTabContent";
+import React from "react";
+import { TTabValue } from "@/typings";
+
+const tabs = [
+  {
+    value: "saved",
+    name: "저장됨",
+  },
+  {
+    value: "created",
+    name: "생성됨",
+  },
+];
 
 export function MyCollections() {
+  const [tabvalue, setTabvalue] = React.useState<TTabValue>("saved");
+  const handleTabValue = (value: string) => {
+    setTabvalue(value as TTabValue);
+  };
+
   return (
-    <div className="w-[calc(100%-20px)]">
-      <Tabs defaultValue="saved">
-        <TabsList>
-          <TabsTrigger value="saved">저장됨</TabsTrigger>
-          <TabsTrigger value="created">생성됨</TabsTrigger>
+    <Tabs
+      className="w-[calc(100%-20px)]"
+      defaultValue="saved"
+      onValueChange={handleTabValue}
+    >
+      <div className="flex w-full justify-center mb-8">
+        <TabsList className="">
+          {tabs.map((tab) => (
+            <TabsTrigger key={tab.name} value={tab.value}>
+              {tab.name}
+            </TabsTrigger>
+          ))}
         </TabsList>
-
-        {/* 저장됨 */}
-        <TabsContent value="saved">
-          {/* 필터, 새 컬렉션 생성 */}
-          <div className="flex items-center justify-between">
-            <button>
-              <SlidersHorizontal />
-            </button>
-            <button>
-              <FolderPlus />
-            </button>
-          </div>
-          {/* 컬렉션들 */}
-          <div>
-            <StackedAlbums />
-          </div>
-        </TabsContent>
-
-        {/* 생성됨 */}
-        <TabsContent value="created"></TabsContent>
-      </Tabs>
-    </div>
+      </div>
+      <MyCollectionsTabContent value={tabvalue} />
+    </Tabs>
   );
 }
