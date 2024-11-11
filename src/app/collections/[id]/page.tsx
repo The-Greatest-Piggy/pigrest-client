@@ -82,7 +82,10 @@ export default function CollectionDetailPage() {
         <div className="flex-col space-y-3">
           <p className="text-base">
             댓글
-            <span className="font-bold ml-1">{image.comments.length}</span>개
+            <span className="font-bold ml-1">
+              {image.comments?.length ?? 0}
+            </span>
+            개
           </p>
           <div className="flex border rounded-lg items-center">
             <Input

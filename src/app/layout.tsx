@@ -57,7 +57,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`w-full min-h-screen p-4 ${pretendard.className}`}>
+      <body className={`w-full min-h-screen ${pretendard.className}`}>
         <GNB />
         <div className="flex w-full justify-around">
           <SNB />
