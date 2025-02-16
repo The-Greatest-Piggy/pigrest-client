@@ -22,7 +22,7 @@ export default function RootLayout({
         <GNB />
         <div className="flex flex-1 space-x-4">
           <SNB />
-          <main className="flex-1 overflow-auto">{children}</main>
+          <main className="flex-1">{children}</main>
         </div>
       </body>
     </html>
