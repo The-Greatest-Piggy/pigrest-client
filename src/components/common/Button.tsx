@@ -37,17 +37,17 @@ const Button: React.FC<ButtonProps> = ({
       transition 
       ${fullWidth ? "w-full" : "w-fit"}
       ${secondary ? "bg-[#E9E9E9]" : "bg-pink-400"}
-      ${secondary ? "text-[#333333]" : "text-white"}
-      ${secondary ? "border-[#333333]" : "border-pink-400"}
+      ${secondary ? "text-zinc-700" : "text-white"}
+      ${secondary ? "border-zinc-700" : "border-pink-400"}
       ${large ? "text-xl" : "text-md"}
       ${large ? "px-5" : "px-4"}
       ${large ? "py-3" : "py-2"}
       ${outline ? "bg-transparent" : ""}
       ${outline ? "border-2 border-pink-400" : ""}
-      ${outline ? "text-[#333333]" : ""}
+      ${outline ? "text-zinc-700" : ""}
       ${none ? "bg-transparent" : ""}
       ${none ? "" : ""}
-      ${none ? "text-[#333333]" : ""}
+      ${none ? "text-zinc-700" : ""}
       ${className || ""}
     `}
     >
