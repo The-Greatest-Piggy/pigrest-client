@@ -50,8 +50,8 @@ const Auth = () => {
         <div className="w-full h-full">
           <div className="flex justify-center">
             <div className="px-16 py-16 self-center mt-2 lg:w-3/5 lg:max-w-xl rounded-md w-full">
-              <p className="text-white text-4xl mb-8 font-semibold">
-                {variant === "login" ? "Sign in" : "Register"}
+              <p className="text-black text-4xl mb-8 font-semibold">
+                {variant === "login" ? "로그인" : "회원가입"}
               </p>
 
               {/* input */}
@@ -82,7 +82,7 @@ const Auth = () => {
                     <div>
                       <Input
                         id="userId"
-                        label="ID"
+                        label="아이디를 입력해 주세요."
                         type="text"
                         onChange={field.onChange}
                         value={field.value || ""}
@@ -142,7 +142,7 @@ const Auth = () => {
                     <div>
                       <Input
                         id="password"
-                        label="Password"
+                        label="비밀번호를 입력해 주세요."
                         type="password"
                         onChange={field.onChange}
                         value={field.value || ""}
@@ -172,7 +172,7 @@ const Auth = () => {
                       <div>
                         <Input
                           id="confirmPassword"
-                          label="Confirm password"
+                          label="비밀번호를 다시 한번 입력해 주세요."
                           type="password"
                           onChange={field.onChange}
                           value={field.value || ""}
@@ -213,7 +213,7 @@ const Auth = () => {
                       <div>
                         <Input
                           id="username"
-                          label="Username"
+                          label="닉네임을 입력해 주세요."
                           type="text"
                           onChange={field.onChange}
                           value={field.value || ""}
@@ -235,7 +235,7 @@ const Auth = () => {
                 // FIXME: 나중에 로직 붙이고 나서 onClick 수정할 것
                 className="bg-pink-400 hover:bg-pink-600 py-3 text-white text-lg font-bold rounded-md w-full mt-10 transition"
               >
-                {variant === "login" ? "Login" : "Register"}
+                {variant === "login" ? "Let's Pig!" : "Start Pigrest!"}
               </button>
 
               {/* footer */}
@@ -246,10 +246,11 @@ const Auth = () => {
                 <span
                   onClick={toggleVariant}
                   className="
-              text-zinc-700
+              text-[#60BAAD]
+              font-bold
               ml-2
               hover:underline
-              hover:text-zinc-950
+              hover:text-[#4f998e]
               cursor-pointer
             "
                 >
