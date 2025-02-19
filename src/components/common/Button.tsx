@@ -33,7 +33,6 @@ const Button: React.FC<ButtonProps> = ({
       rounded-3xl
       font-semibold
       hover:bg-opacity-80
-      hover:text-zinc-950
       transition 
       ${fullWidth ? "w-full" : "w-fit"}
       ${secondary ? "bg-[#E9E9E9]" : "bg-pink-400"}
@@ -46,7 +45,7 @@ const Button: React.FC<ButtonProps> = ({
       ${outline ? "border-2 border-pink-400" : ""}
       ${outline ? "text-zinc-700" : ""}
       ${none ? "bg-transparent" : ""}
-      ${none ? "" : ""}
+      ${none ? "hover:text-zinc-950" : ""}
       ${none ? "text-zinc-700" : ""}
       ${className || ""}
     `}

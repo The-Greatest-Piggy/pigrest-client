@@ -5,10 +5,14 @@ import React from "react";
 import Image from "next/image";
 import Button from "@/components/common/Button";
 import TabArea from "@/components/profile/TabArea";
+import { useRouter } from "next/navigation";
 
 const Profile = () => {
+  const router = useRouter();
+
   const userData = {
     username: "피클_전",
+    bio: "",
     userId: "_pickles_the_pig",
     friends: 16,
   };
@@ -17,7 +21,7 @@ const Profile = () => {
     console.log("click");
   };
   const handleEditProfile = () => {
-    console.log("click");
+    router.push("/profile/edit");
   };
 
   return (
