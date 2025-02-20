@@ -82,7 +82,7 @@ const Auth = () => {
                     <div>
                       <Input
                         id="userId"
-                        label="아이디를 입력해 주세요."
+                        label="아이디를 입력해주세요."
                         type="text"
                         onChange={field.onChange}
                         value={field.value || ""}
@@ -142,7 +142,7 @@ const Auth = () => {
                     <div>
                       <Input
                         id="password"
-                        label="비밀번호를 입력해 주세요."
+                        label="비밀번호를 입력해주세요."
                         type="password"
                         onChange={field.onChange}
                         value={field.value || ""}
@@ -172,7 +172,7 @@ const Auth = () => {
                       <div>
                         <Input
                           id="confirmPassword"
-                          label="비밀번호를 다시 한번 입력해 주세요."
+                          label="비밀번호를 다시 한번 입력해주세요."
                           type="password"
                           onChange={field.onChange}
                           value={field.value || ""}
@@ -213,7 +213,7 @@ const Auth = () => {
                       <div>
                         <Input
                           id="username"
-                          label="닉네임을 입력해 주세요."
+                          label="닉네임을 입력해주세요."
                           type="text"
                           onChange={field.onChange}
                           value={field.value || ""}
