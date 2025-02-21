@@ -59,6 +59,7 @@
 
 body {
   font-family: "Pretendard", sans-serif;
+  padding: 1rem !important;
 }
 
 @layer base {
