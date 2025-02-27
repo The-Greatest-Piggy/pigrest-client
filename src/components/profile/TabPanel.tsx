@@ -1,7 +1,7 @@
 import { TabsContent } from "@radix-ui/react-tabs";
 import React from "react";
-import BoardLayoutForAll from "./BoardLayoutForAll";
-import BoardLayoutOnlySaved from "./BoardLayoutOnlySaved";
+import { Board } from "@/typings/profile";
+import BoardLayout from "./BoardLayout";
 
 interface TabPanelProps {
   value: "pin" | "board";
@@ -22,9 +22,53 @@ const TestBox: React.FC<TestProps> = ({ height, text }) => {
   );
 };
 
-const boardInfos = [
+// FIXME: 서버에서 받아 온 이미지들로 대체 예정
+const defaultBoardInfos: Board[] = [
   {
-    title: "보드1",
+    title: "모든 돼지",
+    isPublic: "DEFAULT",
+    pins: [
+      {
+        imgUrl: "/images/test1.jpg",
+        title: "test1",
+        description: "test1",
+      },
+      {
+        imgUrl: "/images/test2.jpg",
+        title: "test2",
+        description: "test2",
+      },
+      {
+        imgUrl: "/images/test3.jpg",
+        title: "test3",
+        description: "test3",
+      },
+    ],
+    updatedAt: new Date(),
+  },
+  {
+    title: "나의 좋아요",
+    isPublic: "DEFAULT",
+    pins: [
+      {
+        imgUrl: "/images/test3.jpg",
+        title: "test3",
+        description: "test3",
+      },
+      {
+        imgUrl: "/images/test6.jpg",
+        title: "test6",
+        description: "test6",
+      },
+    ],
+    updatedAt: new Date(),
+  },
+];
+
+const customBoardInfos: Board[] = [
+  {
+    title: "내가만든보드1",
+    isPublic: "PUBLIC",
     pins: [
       {
         imgUrl: "/images/test6.jpg",
@@ -40,7 +84,8 @@ const boardInfos = [
     updatedAt: new Date(),
   },
   {
-    title: "보드2",
+    title: "내가만든보드2",
+    isPublic: "PRIVATE",
     pins: [
       {
         imgUrl: "/images/test7.jpg",
@@ -93,10 +138,21 @@ const TabPanel: React.FC<TabPanelProps> = ({ value }) => {
     return (
       <TabsContent value="board" className="flex-1">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-x-6 gap-y-8">
-          {/* default */}
-          <BoardLayoutForAll />
-          {boardInfos.map((board, idx) => (
-            <BoardLayoutOnlySaved key={idx} board={board} />
+          {/* default boards: 모든 돼지, 나의 좋아요  */}
+          {defaultBoardInfos.map((board) => (
+            <BoardLayout
+              key={`default-${board.title}`}
+              board={board}
+              variant="default"
+            />
+          ))}
+          {/* custom boards: 내가 추가로 만든 보드들 */}
+          {customBoardInfos.map((board) => (
+            <BoardLayout
+              key={`custom-${board.title}`}
+              board={board}
+              variant="custom"
+            />
           ))}
         </div>
       </TabsContent>
