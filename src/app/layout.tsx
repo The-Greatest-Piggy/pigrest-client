@@ -18,7 +18,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body className="flex flex-col min-h-screen">
+      <body className="flex flex-col min-h-screen p-4">
         <GNB />
         <div className="flex flex-1 space-x-4">
           <SNB />
