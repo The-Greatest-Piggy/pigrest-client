@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { useFormContext } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 import {
   Select,
   SelectContent,
@@ -11,7 +11,11 @@ import {
 } from "@/components/ui/select";
 
 const PinForm = () => {
-  const { register } = useFormContext();
+  const {
+    control,
+    register,
+    formState: { errors },
+  } = useFormContext();
   const inputRef = useRef<HTMLInputElement>(null); // useRef로 불필요한 리렌더링(인풋에 값 입력할때마다 렌더링되는 이슈) 방지
   const [hashtags, setHashtags] = useState<string[]>([]);
 
@@ -52,10 +56,15 @@ const PinForm = () => {
         <input
           type="text"
           id="title"
-          {...register("title")}
+          {...register("title", { required: "제목은 필수 입력 항목입니다." })}
           placeholder="제목을 입력해주세요."
           className="block w-full border px-4 py-3 rounded-lg text-sm text-zinc-700"
         />
+        {errors.title && (
+          <span className="text-red-500 text-xs mt-1">
+            {errors.title.message as string}
+          </span>
+        )}
       </div>
       {/* description */}
       <div className="flex flex-col gap-2">
@@ -64,7 +73,7 @@ const PinForm = () => {
         </label>
         <textarea
           id="description"
-          {...register("descripton")}
+          {...register("description")}
           rows={6}
           maxLength={200}
           placeholder="설명을 입력해주세요."
@@ -73,23 +82,33 @@ const PinForm = () => {
       </div>
 
       {/* board */}
-      <div className="flex flex-col gap-2">
-        <label className="text-sm font-medium" htmlFor="description">
-          보드
-        </label>
-        <Select>
-          <SelectTrigger className="w-full h-[46px] rounded-lg text-sm text-zinc-700 shadow-none">
-            <SelectValue placeholder="보드를 선택해주세요." />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectLabel>내 보드</SelectLabel>
-              <SelectItem value="board1">보드 1</SelectItem>
-              <SelectItem value="board2">보드 2</SelectItem>
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-      </div>
+      <Controller
+        control={control}
+        name="board"
+        rules={{ required: "보드는 필수 선택 항목입니다." }}
+        render={({ field, fieldState: { error } }) => (
+          <div className="flex flex-col gap-2">
+            <label className="text-sm font-medium" htmlFor="description">
+              보드
+            </label>
+            <Select onValueChange={field.onChange} {...field}>
+              <SelectTrigger className="w-full h-[46px] rounded-lg text-sm text-zinc-700 shadow-none">
+                <SelectValue placeholder="보드를 선택해주세요." />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>내 보드</SelectLabel>
+                  <SelectItem value="board1">보드 1</SelectItem>
+                  <SelectItem value="board2">보드 2</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+            {error && (
+              <span className="text-red-500 text-xs mt-1">{error.message}</span>
+            )}
+          </div>
+        )}
+      />
 
       {/* tags */}
       <div className="flex flex-col gap-2">

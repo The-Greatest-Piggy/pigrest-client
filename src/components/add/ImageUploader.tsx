@@ -13,7 +13,7 @@ const ImageUploader = () => {
     (acceptedFiles: File[]) => {
       if (acceptedFiles.length > 0) {
         const file = acceptedFiles[0];
-        setValue("pinImage", URL.createObjectURL(file));
+        setValue("pinImage", file, { shouldValidate: true });
       }
     },
     [setValue]
@@ -38,12 +38,13 @@ const ImageUploader = () => {
       }`}
     >
       <input {...getInputProps()} />
-      {pinImage ? (
+      {pinImage instanceof File ? (
         <Image
-          src={pinImage}
+          src={URL.createObjectURL(pinImage)}
           alt="새로운 핀 이미지"
-          width={384}
-          height={520}
+          width={0}
+          height={0}
+          style={{ width: "384px", height: "auto" }}
           className="rounded-md object-cover"
         />
       ) : (

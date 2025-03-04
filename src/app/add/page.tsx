@@ -10,7 +10,8 @@ import PinForm from "@/components/add/PinForm";
 interface PinFormProps {
   title: string;
   description: string;
-  pinImage: null | string;
+  pinImage: File | null;
+  board: string;
 }
 
 const Add = () => {
@@ -24,11 +25,15 @@ const Add = () => {
   });
 
   const onSubmit = async (data: PinFormProps) => {
+    // 이미지가 null이거나 파일 객체가 아닌 경우 return
+    if (!(data.pinImage && data.pinImage instanceof File)) return;
+
     const formData = new FormData();
     formData.append("title", data.title);
     formData.append("description", data.description);
+    formData.append("board", data.board);
+    formData.append("pinImage", data.pinImage);
 
-    // TODO: api 호출 > formData 전송
     router.back();
   };
 

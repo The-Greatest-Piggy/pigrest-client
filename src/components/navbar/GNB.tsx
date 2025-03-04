@@ -1,8 +1,9 @@
 /** global nav bar */
-import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
-import Image from "next/image";
-import Link from "next/link";
 import React from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
+import Logo from "../../../public/images/pigrest_logo.png";
 
 const GNB = () => {
   return (
@@ -11,10 +12,12 @@ const GNB = () => {
       <Link href={"/"}>
         <div className="w-16 flex justify-center">
           <Image
-            src={"/images/pigrest_logo.png"}
+            priority
+            src={Logo}
             width={40}
             height={40}
             alt="logo"
+            style={{ width: 40, height: 40 }}
           />
         </div>
       </Link>
