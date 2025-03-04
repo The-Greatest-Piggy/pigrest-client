@@ -13,6 +13,7 @@ import {
 const PinForm = () => {
   const {
     control,
+    setValue,
     register,
     formState: { errors },
   } = useFormContext();
@@ -33,7 +34,9 @@ const PinForm = () => {
     )
       return;
 
-    setHashtags((prev) => [...prev, formmattedTag]);
+    const newHashtags = [...hashtags, formmattedTag];
+    setHashtags(newHashtags);
+    setValue("hashtags", newHashtags);
 
     // 직접 입력값 초기화
     if (inputRef.current) {
@@ -44,6 +47,7 @@ const PinForm = () => {
   const handleDeleteTag = (tag: string) => {
     const sortedTags = hashtags.filter((v) => v !== tag);
     setHashtags(sortedTags);
+    setValue("hashtags", sortedTags);
   };
 
   return (
@@ -110,7 +114,7 @@ const PinForm = () => {
         )}
       />
 
-      {/* tags */}
+      {/* hashtags */}
       <div className="flex flex-col gap-2">
         <label className="text-sm font-medium" htmlFor="description">
           태그

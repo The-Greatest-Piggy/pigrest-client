@@ -1,3 +1,7 @@
+"use client";
+
+import { useEffect } from "react";
+
 interface TestProps {
   height: string;
   text: string;
@@ -14,6 +18,22 @@ const TestBox: React.FC<TestProps> = ({ height, text }) => {
 };
 
 export default function Home() {
+  useEffect(() => {
+    const fetchPins = async () => {
+      try {
+        const res = await fetch("/api/pins");
+        if (!res.ok) throw new Error("핀 목록 불러오기 실패");
+
+        const data = await res.json();
+        console.log("핀 목록: ", data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchPins();
+  }, []);
+
   return (
     <div className="flex-1 columns-2 md:columns-3 lg:columns-4 xl:columns-5 2xl:columns-6 gap-5">
       <TestBox height="h-[250px]" text="1" />

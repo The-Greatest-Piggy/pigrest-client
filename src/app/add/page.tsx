@@ -12,6 +12,7 @@ interface PinFormProps {
   description: string;
   pinImage: File | null;
   board: string;
+  hashtags: string[];
 }
 
 const Add = () => {
@@ -21,6 +22,8 @@ const Add = () => {
       title: "",
       description: "",
       pinImage: null,
+      board: "",
+      hashtags: [],
     },
   });
 
@@ -31,10 +34,22 @@ const Add = () => {
     const formData = new FormData();
     formData.append("title", data.title);
     formData.append("description", data.description);
-    formData.append("board", data.board);
     formData.append("pinImage", data.pinImage);
+    formData.append("board", data.board);
+    formData.append("hashtags", JSON.stringify(data.hashtags));
 
-    router.back();
+    try {
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      const resdata = await res.json();
+      console.log("success msw: ", resdata);
+      router.back();
+    } catch (error) {
+      console.log("error:", error);
+    }
   };
 
   return (
