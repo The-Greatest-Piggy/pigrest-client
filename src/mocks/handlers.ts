@@ -34,15 +34,67 @@ export const handlers = [
     return HttpResponse.json(allPins);
   }),
 
-  http.post("/api/upload", async ({ request }) => {
-    // pindata type으로 jsonData를 받아준다
-    const jsonData = (await request.json()) as PinData;
+  // http.post("/api/upload", async ({ request }) => {
+  //   // pindata type으로 jsonData를 받아준다
+  //   const jsonData = (await request.json()) as PinData;
 
-    const newPin = {
-      ...jsonData,
+  //   const newPin = {
+  //     ...jsonData,
+  //     id: Date.now().toString(),
+  //   };
+  //   allPins.push(newPin);
+  //   return HttpResponse.json(newPin, { status: 201 });
+  // }),
+  http.post("/api/upload", async ({ request }) => {
+    const formData = await request.formData();
+    const profileImage = formData.get("profileImage");
+    const username = formData.get("username")?.toString();
+    const bio = formData.get("bio")?.toString();
+
+    // 이미지 없거나 File 타입이 아닌 경우 Error
+    if (!profileImage || !(profileImage instanceof File)) {
+      return HttpResponse.json(
+        { error: "no image file provided" },
+        { status: 400 }
+      );
+    }
+
+    const newProfileData = {
       id: Date.now().toString(),
+      filename: profileImage.name,
+      type: profileImage.type,
+      size: profileImage.size,
+      username,
+      bio,
     };
-    allPins.push(newPin);
-    return HttpResponse.json(newPin, { status: 201 });
+
+    return HttpResponse.json(newProfileData, { status: 200 });
+  }),
+
+  http.post("/api/test", async ({ request }) => {
+    const formData = await request.formData();
+    const img = formData.get("image");
+    const title = formData.get("title")?.toString() || "untitled";
+    const description = formData.get("description")?.toString() || "";
+
+    // 이미지가 없거나 File 타입이 아닌 경우 에러
+    if (!img || !(img instanceof File)) {
+      return HttpResponse.json(
+        { error: "no image file provided" },
+        { status: 400 }
+      );
+    }
+
+    const newImageData = {
+      id: Date.now().toString(),
+      filename: img.name,
+      type: img.type,
+      size: img.size,
+      title,
+      description,
+    };
+
+    console.log("msw test image data: ", newImageData);
+    return HttpResponse.json(newImageData, { status: 201 });
   }),
 ];

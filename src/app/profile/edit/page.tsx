@@ -14,8 +14,8 @@ interface ProfileFormProps {
 
 const ProfileEdit = () => {
   const router = useRouter();
-  const fileInput = useRef<HTMLInputElement>(null);
-  const [base64, setBase64] = useState<string>("/images/default_avatar.png");
+  const fileInput = useRef<HTMLInputElement>(null); // input요소 직접 접근
+  const [imageFile, setImageFile] = useState<File | null>(null); // 서버로 보낼 파일 데이터
 
   const {
     register,
@@ -39,39 +39,48 @@ const ProfileEdit = () => {
   };
 
   const uploadImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (files && files[0]) {
-      const file = files[0];
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onloadend = () => {
-        if (reader.result) {
-          setBase64(reader.result.toString()); // base64 데이터 저장
-          setValue("profileImage", reader.result.toString()); // 화면에 보여줄 이미지
-        }
-      };
-    }
+    if (!e.target.files) return;
+    const file = e.target.files[0];
+    setImageFile(file);
+
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      if (reader.result) {
+        setValue("profileImage", reader.result.toString());
+      }
+    };
   };
 
   const resetImage = () => {
-    setBase64("/images/default_avatar.png");
     setValue("profileImage", "/images/default_avatar.png");
+    setImageFile(null);
     if (fileInput.current) {
       fileInput.current.value = "";
     }
   };
 
   const onSubmit = async (data: ProfileFormProps) => {
-    // 저장할 데이터
-    const payload = {
-      username: data.username,
-      bio: data.bio,
-      profileImage: base64,
-    };
-    console.log("payload: ", payload);
+    if (!imageFile) return;
 
-    // TODO: api 호출
-    router.back();
+    // formData 생성
+    const formData = new FormData();
+    formData.append("username", data.username);
+    formData.append("bio", data.bio);
+    formData.append("profileImage", imageFile);
+
+    // 서버에 post
+    try {
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+      const data = await res.json();
+      console.log("success to upload profile: ", data);
+      router.back();
+    } catch (error) {
+      console.log("failed to upload profile: ", error);
+    }
   };
 
   return (
