@@ -10,7 +10,8 @@ import PinForm from "@/components/add/PinForm";
 interface PinFormProps {
   title: string;
   description: string;
-  pinImage: File | null;
+  // pinImage: File | null;
+  pinImage: string; // base64
   board: string;
   hashtags: string[];
 }
@@ -21,35 +22,55 @@ const Add = () => {
     defaultValues: {
       title: "",
       description: "",
-      pinImage: null,
+      pinImage: "",
       board: "",
       hashtags: [],
     },
   });
 
   const onSubmit = async (data: PinFormProps) => {
-    // 이미지가 null이거나 파일 객체가 아닌 경우 return
-    if (!(data.pinImage && data.pinImage instanceof File)) return;
-
-    const formData = new FormData();
-    formData.append("title", data.title);
-    formData.append("description", data.description);
-    formData.append("pinImage", data.pinImage);
-    formData.append("board", data.board);
-    formData.append("hashtags", JSON.stringify(data.hashtags));
+    const payload = {
+      title: data.title,
+      description: data.description,
+      pinImage: data.pinImage,
+      board: data.board,
+      hashtags: data.hashtags,
+    };
 
     try {
       const res = await fetch("/api/upload", {
         method: "POST",
-        body: formData,
+        body: JSON.stringify(payload),
       });
 
-      const resdata = await res.json();
-      console.log("success msw: ", resdata);
+      const resData = await res.json();
+      console.log("success: ", resData);
       router.back();
     } catch (error) {
-      console.log("error:", error);
+      console.log("error: ", error);
     }
+    // // 이미지가 null이거나 파일 객체가 아닌 경우 return
+    // if (!(data.pinImage && data.pinImage instanceof File)) return;
+
+    // const formData = new FormData();
+    // formData.append("title", data.title);
+    // formData.append("description", data.description);
+    // formData.append("pinImage", data.pinImage);
+    // formData.append("board", data.board);
+    // formData.append("hashtags", JSON.stringify(data.hashtags));
+
+    // try {
+    //   const res = await fetch("/api/upload", {
+    //     method: "POST",
+    //     body: formData,
+    //   });
+
+    //   const resdata = await res.json();
+    //   console.log("success msw: ", resdata);
+    //   router.back();
+    // } catch (error) {
+    //   console.log("error:", error);
+    // }
   };
 
   return (

@@ -15,7 +15,7 @@ interface ProfileFormProps {
 const ProfileEdit = () => {
   const router = useRouter();
   const fileInput = useRef<HTMLInputElement>(null);
-  const [imageFile, setImageFile] = useState<File | null>(null); // 서버로 보낼 파일 데이터
+  const [base64, setBase64] = useState<string>("/images/default_avatar.png");
 
   const {
     register,
@@ -42,33 +42,35 @@ const ProfileEdit = () => {
     const files = e.target.files;
     if (files && files[0]) {
       const file = files[0];
-      const url = URL.createObjectURL(file);
-      setValue("profileImage", url); // 화면에 보여줄 이미지
-      setImageFile(file); // 서버에 넘겨줄 File 객체 저장
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onloadend = () => {
+        if (reader.result) {
+          setBase64(reader.result.toString()); // base64 데이터 저장
+          setValue("profileImage", reader.result.toString()); // 화면에 보여줄 이미지
+        }
+      };
     }
   };
 
   const resetImage = () => {
+    setBase64("/images/default_avatar.png");
     setValue("profileImage", "/images/default_avatar.png");
-    setImageFile(null);
     if (fileInput.current) {
       fileInput.current.value = "";
     }
   };
 
   const onSubmit = async (data: ProfileFormProps) => {
-    // FormData 생성
-    const formData = new FormData();
+    // 저장할 데이터
+    const payload = {
+      username: data.username,
+      bio: data.bio,
+      profileImage: base64,
+    };
+    console.log("payload: ", payload);
 
-    formData.append("username", data.username);
-    formData.append("bio", data.bio);
-
-    // 이미지 파일이 있는 경우 추가
-    if (imageFile) {
-      formData.append("profileImage", imageFile);
-    }
-
-    // TODO: api 호출 > formData 전송
+    // TODO: api 호출
     router.back();
   };
 

@@ -13,7 +13,14 @@ const ImageUploader = () => {
     (acceptedFiles: File[]) => {
       if (acceptedFiles.length > 0) {
         const file = acceptedFiles[0];
-        setValue("pinImage", file, { shouldValidate: true });
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onloadend = () => {
+          if (reader.result) {
+            setValue("pinImage", reader.result.toString());
+          }
+        };
+        // setValue("pinImage", file, { shouldValidate: true });
       }
     },
     [setValue]
@@ -38,9 +45,9 @@ const ImageUploader = () => {
       }`}
     >
       <input {...getInputProps()} />
-      {pinImage instanceof File ? (
+      {pinImage ? (
         <Image
-          src={URL.createObjectURL(pinImage)}
+          src={pinImage}
           alt="새로운 핀 이미지"
           width={0}
           height={0}
