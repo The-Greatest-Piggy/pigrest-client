@@ -14,7 +14,7 @@ interface ProfileFormProps {
 
 const ProfileEdit = () => {
   const router = useRouter();
-  const fileInput = useRef<HTMLInputElement>(null);
+  const fileInput = useRef<HTMLInputElement>(null); // input요소 직접 접근
   const [imageFile, setImageFile] = useState<File | null>(null); // 서버로 보낼 파일 데이터
 
   const {
@@ -39,13 +39,17 @@ const ProfileEdit = () => {
   };
 
   const uploadImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (files && files[0]) {
-      const file = files[0];
-      const url = URL.createObjectURL(file);
-      setValue("profileImage", url); // 화면에 보여줄 이미지
-      setImageFile(file); // 서버에 넘겨줄 File 객체 저장
-    }
+    if (!e.target.files) return;
+    const file = e.target.files[0];
+    setImageFile(file);
+
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      if (reader.result) {
+        setValue("profileImage", reader.result.toString());
+      }
+    };
   };
 
   const resetImage = () => {
@@ -57,19 +61,26 @@ const ProfileEdit = () => {
   };
 
   const onSubmit = async (data: ProfileFormProps) => {
-    // FormData 생성
-    const formData = new FormData();
+    if (!imageFile) return;
 
+    // formData 생성
+    const formData = new FormData();
     formData.append("username", data.username);
     formData.append("bio", data.bio);
+    formData.append("profileImage", imageFile);
 
-    // 이미지 파일이 있는 경우 추가
-    if (imageFile) {
-      formData.append("profileImage", imageFile);
+    // 서버에 post
+    try {
+      const res = await fetch("/api/upload/profile", {
+        method: "POST",
+        body: formData,
+      });
+      const data = await res.json();
+      console.log("success to upload profile: ", data);
+      router.back();
+    } catch (error) {
+      console.log("failed to upload profile: ", error);
     }
-
-    // TODO: api 호출 > formData 전송
-    router.back();
   };
 
   return (

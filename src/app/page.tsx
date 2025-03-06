@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 interface TestProps {
   height: string;
@@ -17,7 +17,19 @@ const TestBox: React.FC<TestProps> = ({ height, text }) => {
   );
 };
 
+interface PinFormProps {
+  id: string;
+  title: string;
+  description: string;
+  // pinImage: File | null;
+  pinImage: string; // base64
+  board: string;
+  hashtags: string[];
+}
+
 export default function Home() {
+  const [allPin, setAllPin] = useState<PinFormProps[]>([]);
+
   useEffect(() => {
     const fetchPins = async () => {
       try {
@@ -25,7 +37,7 @@ export default function Home() {
         if (!res.ok) throw new Error("핀 목록 불러오기 실패");
 
         const data = await res.json();
-        console.log("핀 목록: ", data);
+        setAllPin(data);
       } catch (error) {
         console.log(error);
       }
@@ -34,8 +46,12 @@ export default function Home() {
     fetchPins();
   }, []);
 
+  console.log("all pin?: ", allPin);
   return (
     <div className="flex-1 columns-2 md:columns-3 lg:columns-4 xl:columns-5 2xl:columns-6 gap-5">
+      {allPin.map((pin) => (
+        <img src={pin.pinImage} alt={pin.title} key={pin.id} />
+      ))}
       <TestBox height="h-[250px]" text="1" />
       <TestBox height="h-[120px]" text="2" />
       <TestBox height="h-[180px]" text="3" />
