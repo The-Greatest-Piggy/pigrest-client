@@ -71,7 +71,7 @@ const ProfileEdit = () => {
 
     // 서버에 post
     try {
-      const res = await fetch("/api/upload", {
+      const res = await fetch("/api/upload/profile", {
         method: "POST",
         body: formData,
       });

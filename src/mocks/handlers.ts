@@ -5,7 +5,7 @@ interface PinData {
   title: string;
   description: string;
   // pinImage: File | null;
-  pinImage: string; // base64
+  pinImage: string; // url
   board: string;
   hashtags: string[];
 }
@@ -45,7 +45,39 @@ export const handlers = [
   //   allPins.push(newPin);
   //   return HttpResponse.json(newPin, { status: 201 });
   // }),
-  http.post("/api/upload", async ({ request }) => {
+
+  http.post("/api/upload/pin", async ({ request }) => {
+    const formData = await request.formData();
+    const title = formData.get("title")?.toString();
+    const description = formData.get("description")?.toString();
+    const pinImage = formData.get("pinImage");
+    const board = formData.get("board")?.toString();
+    const hashtags = formData.get("hashtags")?.toString();
+
+    console.log("????", pinImage, typeof pinImage);
+    // 이미지 없거나 File타입이 아닌 경우 Error
+    if (!pinImage || !(pinImage instanceof File)) {
+      return HttpResponse.json(
+        { error: "no image file provided" },
+        { status: 400 }
+      );
+    }
+
+    const newPinData = {
+      id: Date.now().toString(),
+      filename: pinImage.name,
+      type: pinImage.type,
+      size: pinImage.size,
+      title,
+      description,
+      board,
+      hashtags,
+    };
+
+    return HttpResponse.json(newPinData, { status: 201 });
+  }),
+
+  http.post("/api/upload/profile", async ({ request }) => {
     const formData = await request.formData();
     const profileImage = formData.get("profileImage");
     const username = formData.get("username")?.toString();
@@ -68,7 +100,7 @@ export const handlers = [
       bio,
     };
 
-    return HttpResponse.json(newProfileData, { status: 200 });
+    return HttpResponse.json(newProfileData, { status: 201 });
   }),
 
   http.post("/api/test", async ({ request }) => {
