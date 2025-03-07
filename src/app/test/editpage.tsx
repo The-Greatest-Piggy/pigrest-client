@@ -1,16 +1,16 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import Header from "@/components/common/Header";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import React, { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { observer } from "mobx-react-lite";
-import Header from "@/components/common/Header";
 import { useProfileStore } from "@/stores/ProfileStore";
 
 interface ProfileFormProps {
   username: string;
-  bio: string;
+  bio: string | null;
   profileImage: string;
 }
 
@@ -23,22 +23,25 @@ const ProfileEdit = observer(() => {
   const {
     register,
     handleSubmit,
+    watch,
     setValue,
     formState: { errors },
   } = useForm<ProfileFormProps>({
     defaultValues: {
       username: profileStore.username,
-      bio: profileStore.bio || "",
+      bio: profileStore.bio,
       profileImage: profileStore.profileImage,
     },
   });
+
+  // const profileImage = watch("profileImage");
 
   // 버튼 클릭 시, 인풋을 클릭한 효과를 준다
   const handleImageClick = () => {
     fileInput.current?.click();
   };
 
-  const uploadImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const uploadImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
     const file = e.target.files[0];
     setImageFile(file);
@@ -47,56 +50,117 @@ const ProfileEdit = observer(() => {
     reader.readAsDataURL(file);
     reader.onload = () => {
       if (reader.result) {
-        setValue("profileImage", reader.result.toString());
         profileStore.setProfileImage(reader.result.toString());
+        setValue("profileImage", reader.result.toString());
       }
     };
   };
 
-  const resetImage = () => {
-    setValue("profileImage", "/images/default_avatar.png");
-    profileStore.setProfileImage("/images/default_avatar.png");
-    setImageFile(null);
+  const resetImage = async () => {
+    try {
+      const res = await fetch("/images/default_avatar.png");
+      const blob = await res.blob();
+      const defaultFile = new File([blob], "default_avatar.png", {
+        type: "image/*",
+      });
+
+      profileStore.setProfileImage("/images/default_avatar.png");
+      setImageFile(defaultFile);
+    } catch (error) {
+      console.log("Error fetching default profile image: ", error);
+    }
+
     if (fileInput.current) fileInput.current.value = "";
   };
 
-  // string 타입을 File 타입으로 변환해주기 (프로필 사진이 안바뀐경우/초기화된 경우)
-  const convertToFile = async (image: string): Promise<File> => {
-    const response = await fetch(image); // fetch image data
-    const blob = await response.blob(); // convert res to blob
-    const filename = image.split("/").pop() || "profileImage"; // extract filename
-    const file = new File([blob], filename, { type: blob.type }); // create file object from blob
-    return file;
-  };
+  // const resetImage = () => {
+  //   profileStore.setProfileImage("/images/default_avatar.png");
+  //   setValue("profileImage", "/images/default_avatar.png");
+  //   // default 이미지로 대체한다
+
+  //   // setImageFile(new File([], "default_avatar.png", { type: "image/png" }));
+  //   if (fileInput.current) {
+  //     fileInput.current.value = "";
+  //   }
+  //   console.log(
+  //     "reset된 이미지: ",
+  //     imageFile?.name,
+  //     imageFile?.size,
+  //     imageFile?.type
+  //   );
+  // };
 
   const onSubmit = async (data: ProfileFormProps) => {
     // formData 생성
     const formData = new FormData();
     formData.append("username", data.username);
-    formData.append("bio", data.bio);
-    if (imageFile) {
+    formData.append("bio", data.bio || "");
+
+    if (imageFile && imageFile.size > 0) {
+      // 프로필 이미지를 변경했거나, 기본 이미지인 경우
       formData.append("profileImage", imageFile);
     } else {
-      const imageFile = await convertToFile(profileStore.profileImage);
-      formData.append("profileImage", imageFile);
-    }
+      const imageRes = await fetch(profileStore.profileImage);
+      const blob = await imageRes.blob();
+      const imageFile = new File([blob], "default_profile.png", {
+        type: "image/*",
+      });
 
-    // 서버에 post 요청 보내기
+      setImageFile(imageFile);
+    }
+    // if (imageFile) {
+    //   formData.append("profileImage", imageFile);
+    // } else {
+    //   formData.append("profileImage", profileStore.profileImage);
+    // }
+
     try {
       const res = await fetch("/api/upload/profile", {
         method: "POST",
         body: formData,
       });
+
+      if (!res.ok) {
+        throw new Error("Failed to upload profile");
+      }
+
       const data = await res.json();
-      console.log("profile updated successfully: ", data);
+      console.log("Profile updated successfully: ", data);
 
       profileStore.setUsername(data.username);
       profileStore.setBio(data.bio);
-      profileStore.setProfileImage(profileStore.profileImage);
+      profileStore.setProfileImage(data.profileImage);
+
       router.back();
     } catch (error) {
-      console.log("failed to upload profile: ", error);
+      console.error("Failed to update profile:", error);
     }
+    // if (!imageFile) return;
+
+    // // formData 생성
+    // const formData = new FormData();
+    // formData.append("username", data.username);
+    // formData.append("bio", data.bio === null ? "" : data.bio);
+    // formData.append("profileImage", imageFile);
+
+    // // 서버에 post
+    // try {
+    //   const res = await fetch("/api/upload/profile", {
+    //     method: "POST",
+    //     body: formData,
+    //   });
+    //   const data = await res.json();
+    //   console.log("success to upload profile: ", data);
+
+    //   // update mobx
+    //   profileStore.setUsername(data.username);
+    //   profileStore.setBio(data.bio);
+    //   profileStore.setProfileImage(profileImage);
+
+    //   router.back();
+    // } catch (error) {
+    //   console.log("failed to upload profile: ", error);
+    // }
   };
 
   return (

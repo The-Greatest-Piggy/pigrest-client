@@ -1,21 +1,16 @@
 "use client";
 
 import React from "react";
-
 import Image from "next/image";
 import Button from "@/components/common/Button";
 import TabArea from "@/components/profile/TabArea";
 import { useRouter } from "next/navigation";
+import { observer } from "mobx-react-lite";
+import { useProfileStore } from "@/stores/ProfileStore";
 
-const Profile = () => {
+const Profile = observer(() => {
   const router = useRouter();
-
-  const userData = {
-    username: "피클_전",
-    bio: "",
-    userId: "_pickles_the_pig",
-    friends: 16,
-  };
+  const profileStore = useProfileStore();
 
   const handleShare = () => {
     console.log("click");
@@ -29,17 +24,24 @@ const Profile = () => {
       <div className="flex-none flex flex-col items-center justify-center gap-5 mt-12">
         {/* profile image */}
         <Image
-          src={"/images/tester.jpg"}
+          src={profileStore.profileImage}
           width={"160"}
           height={"160"}
-          alt="tester"
-          className="rounded-full"
+          alt="profile image"
+          className="rounded-full aspect-square object-cover"
         />
-        {/* infos: username / userId / friends */}
+        {/* infos: username / userId / followers / followings */}
         <div className="flex flex-col items-center">
-          <p className="text-3xl font-bold mb-4">{userData.username}</p>
-          <p className="text-sm text-[#757575]">@{userData.userId}</p>
-          <div className="font-semibold">프렌즈 {userData.friends}명</div>
+          <div className="flex flex-col items-center mb-4">
+            <p className="text-3xl font-bold">{profileStore.username}</p>
+            <p className="text-[#333333]">{profileStore.bio}</p>
+          </div>
+          <p className="text-sm text-[#757575]">@{profileStore.userId}</p>
+          <div className="flex gap-1 font-semibold">
+            <p>팔로워 {profileStore.followers}</p>
+            <span>·</span>
+            <p>팔로잉 {profileStore.followings}</p>
+          </div>
         </div>
         {/* buttons */}
         <div className="space-x-2">
@@ -52,6 +54,6 @@ const Profile = () => {
       </div>
     </div>
   );
-};
+});
 
 export default Profile;
