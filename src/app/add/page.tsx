@@ -7,7 +7,8 @@ import Header from "@/components/common/Header";
 import ImageUploader from "@/components/add/ImageUploader";
 import PinForm from "@/components/add/PinForm";
 
-interface PinFormProps {
+interface Pin {
+  id: string;
   title: string;
   description: string;
   pinImage: File | null;
@@ -18,7 +19,7 @@ interface PinFormProps {
 
 const Add = () => {
   const router = useRouter();
-  const methods = useForm<PinFormProps>({
+  const methods = useForm<Pin>({
     defaultValues: {
       title: "",
       description: "",
@@ -28,7 +29,7 @@ const Add = () => {
     },
   });
 
-  const onSubmit = async (data: PinFormProps) => {
+  const onSubmit = async (data: Pin) => {
     if (!data.pinImage) return;
 
     // formData 작성

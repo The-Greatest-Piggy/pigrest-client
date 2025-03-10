@@ -16,7 +16,7 @@ const BoardLayout: React.FC<BoardLayoutProps> = ({ board, variant }) => {
   const emptyData = Array(emptyCount)
     .fill(null)
     .map((_, i) => ({
-      imgUrl: null,
+      pinImageUrl: null,
       title: `empty-${i}`,
       description: `empty-${i}`,
     }));
@@ -58,9 +58,9 @@ const BoardLayout: React.FC<BoardLayoutProps> = ({ board, variant }) => {
               }
                 `}
           >
-            {info.imgUrl ? (
+            {info.pinImageUrl ? (
               <Image
-                src={info.imgUrl}
+                src={info.pinImageUrl}
                 alt={info.title}
                 fill
                 className="object-cover"
