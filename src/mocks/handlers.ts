@@ -4,8 +4,7 @@ interface PinData {
   id: string;
   title: string;
   description: string;
-  // pinImage: File | null;
-  pinImage: string; // url
+  pinImageUrl: string; // url
   board: string;
   hashtags: string[];
 }
@@ -15,17 +14,81 @@ const allPins: PinData[] = [
     id: "1",
     title: "test1",
     description: "test des1",
-    pinImage: "/images/test5.jpg",
+    pinImageUrl: "/images/test5.jpg",
     board: "보드 1",
     hashtags: ["# test1", "# test2"],
   },
   {
     id: "2",
-    title: "test2",
+    title: "👁🫦👁",
     description: "test des2",
-    pinImage: "/images/test6.jpg",
+    pinImageUrl: "/images/test6.jpg",
     board: "보드 2",
     hashtags: ["# wowwow", "# 오댑악"],
+  },
+  {
+    id: "3",
+    title: "test3",
+    description: "test des3",
+    pinImageUrl: "/images/test1.jpg",
+    board: "보드 1",
+    hashtags: ["# test1", "# test2"],
+  },
+  {
+    id: "4",
+    title: "test4",
+    description: "test des4",
+    pinImageUrl: "/images/test2.jpg",
+    board: "보드 1",
+    hashtags: ["# wowwow", "# 오댑악"],
+  },
+  {
+    id: "5",
+    title: "test5",
+    description: "test des5",
+    pinImageUrl: "/images/test3.jpg",
+    board: "보드 1",
+    hashtags: ["# test5", "# test2"],
+  },
+  {
+    id: "6",
+    title: "test6",
+    description: "test des6",
+    pinImageUrl: "/images/tester.jpg",
+    board: "보드 1",
+    hashtags: ["# wowwow", "# 오댑악"],
+  },
+  {
+    id: "7",
+    title: "test7",
+    description: "test des7",
+    pinImageUrl: "/images/test7.jpg",
+    board: "보드 2",
+    hashtags: ["# test7", "# test2"],
+  },
+  {
+    id: "8",
+    title: "test8",
+    description: "test des8",
+    pinImageUrl: "/images/test8.jpg",
+    board: "보드 2",
+    hashtags: ["# wowwow", "# 오댑악"],
+  },
+  {
+    id: "9",
+    title: "❤️❤️",
+    description: "test des9",
+    pinImageUrl: "/images/test9.jpg",
+    board: "보드 2",
+    hashtags: ["# 꽥꽥", "# 히히히"],
+  },
+  {
+    id: "10",
+    title: "test10",
+    description: "test des10",
+    pinImageUrl: "/images/test10.jpg",
+    board: "보드 1",
+    hashtags: ["# duck", "# 오댑악"],
   },
 ];
 
@@ -34,29 +97,17 @@ export const handlers = [
     return HttpResponse.json(allPins);
   }),
 
-  // http.post("/api/upload", async ({ request }) => {
-  //   // pindata type으로 jsonData를 받아준다
-  //   const jsonData = (await request.json()) as PinData;
-
-  //   const newPin = {
-  //     ...jsonData,
-  //     id: Date.now().toString(),
-  //   };
-  //   allPins.push(newPin);
-  //   return HttpResponse.json(newPin, { status: 201 });
-  // }),
-
   http.post("/api/upload/pin", async ({ request }) => {
     const formData = await request.formData();
     const title = formData.get("title")?.toString();
     const description = formData.get("description")?.toString();
-    const pinImage = formData.get("pinImage");
+    const pinImageUrl = formData.get("pinImageUrl");
     const board = formData.get("board")?.toString();
     const hashtags = formData.get("hashtags")?.toString();
 
-    console.log("????", pinImage, typeof pinImage);
+    console.log("????", pinImageUrl, typeof pinImageUrl);
     // 이미지 없거나 File타입이 아닌 경우 Error
-    if (!pinImage || !(pinImage instanceof File)) {
+    if (!pinImageUrl || !(pinImageUrl instanceof File)) {
       return HttpResponse.json(
         { error: "no image file provided" },
         { status: 400 }
@@ -65,9 +116,9 @@ export const handlers = [
 
     const newPinData = {
       id: Date.now().toString(),
-      filename: pinImage.name,
-      type: pinImage.type,
-      size: pinImage.size,
+      filename: pinImageUrl.name,
+      type: pinImageUrl.type,
+      size: pinImageUrl.size,
       title,
       description,
       board,

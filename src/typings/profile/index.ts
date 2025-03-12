@@ -1,3 +1,5 @@
+import { Pin } from "../main";
+
 export const PUBLIC_STATUS_TYPE = {
   DEFAULT: "",
   PRIVATE: "비공개",
@@ -5,12 +7,6 @@ export const PUBLIC_STATUS_TYPE = {
 } as const;
 
 export type IsPublic = keyof typeof PUBLIC_STATUS_TYPE;
-
-export interface Pin {
-  imgUrl: string | null;
-  title: string;
-  description: string;
-}
 
 export interface Board {
   title: string;
