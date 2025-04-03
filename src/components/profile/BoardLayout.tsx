@@ -1,6 +1,6 @@
 import React from "react";
 import { useRouter } from "next/navigation";
-import { Board, PUBLIC_STATUS_TYPE } from "@/typings/profile";
+import { Board } from "@/typings/profile";
 import Image from "next/image";
 
 interface BoardLayoutProps {
@@ -25,7 +25,7 @@ const BoardLayout: React.FC<BoardLayoutProps> = ({ board, variant }) => {
 
   const combinedData = [...board.pins, ...emptyData];
   // 공개 비공개 여부
-  const isPublicStatus = PUBLIC_STATUS_TYPE[board.isPublic];
+  const isPublicStatus = board.isPublic;
 
   return (
     <div
