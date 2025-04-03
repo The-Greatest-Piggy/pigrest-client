@@ -16,7 +16,7 @@ const defaultBoardInfos: Board[] = [
   {
     id: "00001",
     title: "모든 핀",
-    isPublic: "DEFAULT",
+    isPublic: true,
     pins: [
       {
         id: "1",
@@ -48,7 +48,7 @@ const defaultBoardInfos: Board[] = [
   {
     id: "00002",
     title: "나의 좋아요",
-    isPublic: "DEFAULT",
+    isPublic: true,
     pins: [
       {
         id: "4",
@@ -75,7 +75,7 @@ const customBoardInfos: Board[] = [
   {
     id: "00003",
     title: "내가만든보드1",
-    isPublic: "PUBLIC",
+    isPublic: true,
     pins: [
       {
         id: "6",
@@ -99,7 +99,7 @@ const customBoardInfos: Board[] = [
   {
     id: "00004",
     title: "내가만든보드2",
-    isPublic: "PRIVATE",
+    isPublic: false,
     pins: [
       {
         id: "8",

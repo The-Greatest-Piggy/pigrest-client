@@ -26,7 +26,7 @@ const Radio: React.FC<RadioProps> = ({
   onChange,
 }) => {
   return (
-    <div className="space-x-6">
+    <div className="space-x-2">
       <input
         type="radio"
         id={id}
