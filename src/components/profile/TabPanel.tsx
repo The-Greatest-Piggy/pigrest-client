@@ -14,6 +14,7 @@ interface TabPanelProps {
 // FIXME: 서버에서 받아 온 이미지들로 대체 예정
 const defaultBoardInfos: Board[] = [
   {
+    id: "00001",
     title: "모든 핀",
     isPublic: "DEFAULT",
     pins: [
@@ -45,6 +46,7 @@ const defaultBoardInfos: Board[] = [
     updatedAt: new Date(),
   },
   {
+    id: "00002",
     title: "나의 좋아요",
     isPublic: "DEFAULT",
     pins: [
@@ -71,6 +73,7 @@ const defaultBoardInfos: Board[] = [
 
 const customBoardInfos: Board[] = [
   {
+    id: "00003",
     title: "내가만든보드1",
     isPublic: "PUBLIC",
     pins: [
@@ -94,6 +97,7 @@ const customBoardInfos: Board[] = [
     updatedAt: new Date(),
   },
   {
+    id: "00004",
     title: "내가만든보드2",
     isPublic: "PRIVATE",
     pins: [
@@ -145,7 +149,7 @@ const TabPanel: React.FC<TabPanelProps> = ({ value }) => {
     };
 
     fetchPins();
-  });
+  }, []);
 
   if (value === "pin") {
     return (
@@ -178,13 +182,14 @@ const TabPanel: React.FC<TabPanelProps> = ({ value }) => {
             />
           ))}
           {/* custom boards: 내가 추가로 만든 보드들 */}
-          {customBoardInfos.map((board) => (
-            <BoardLayout
-              key={`custom-${board.title}`}
-              board={board}
-              variant="custom"
-            />
-          ))}
+          {customBoardInfos &&
+            customBoardInfos.map((board) => (
+              <BoardLayout
+                key={`custom-${board.title}`}
+                board={board}
+                variant="custom"
+              />
+            ))}
         </div>
       </TabsContent>
     );

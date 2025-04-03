@@ -1,4 +1,5 @@
 import React from "react";
+import { useRouter } from "next/navigation";
 import { Board, PUBLIC_STATUS_TYPE } from "@/typings/profile";
 import Image from "next/image";
 
@@ -8,6 +9,7 @@ interface BoardLayoutProps {
 }
 
 const BoardLayout: React.FC<BoardLayoutProps> = ({ board, variant }) => {
+  const router = useRouter();
   const totalLength = board.pins.length;
   const maxImages = variant === "custom" ? 3 : 4;
 
@@ -26,7 +28,10 @@ const BoardLayout: React.FC<BoardLayoutProps> = ({ board, variant }) => {
   const isPublicStatus = PUBLIC_STATUS_TYPE[board.isPublic];
 
   return (
-    <div className="relative w-60 h-56">
+    <div
+      className="relative w-60 h-56"
+      onClick={() => router.push(`/board/${board.title}`)}
+    >
       <div className="relative">
         {combinedData.slice(0, maxImages).map((info, idx) => (
           <div
