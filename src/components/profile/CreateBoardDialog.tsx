@@ -13,7 +13,7 @@ import {
 import RadioGroup from "../common/Radio";
 
 const CreateBoardDialog = () => {
-  const [isPublic, setIsPublic] = useState<"public" | "private">("public"); // defualt는 전체공개(public)
+  const [isPublic, setIsPublic] = useState<boolean>(true);
 
   return (
     <Dialog>
@@ -63,8 +63,8 @@ const CreateBoardDialog = () => {
                   label: "비공개",
                 },
               ]}
-              selectedValue={isPublic}
-              onChange={(value) => setIsPublic(value as "public" | "private")}
+              selectedValue={isPublic === true ? "public" : "private"}
+              onChange={() => setIsPublic((prev) => !prev)}
               className="flex flex-row gap-20"
             />
           </div>

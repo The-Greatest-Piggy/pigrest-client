@@ -12,7 +12,7 @@ export const MswComponent = () => {
         })();
       } else {
         (async () => {
-          const { worker } = await import("@/mocks/brower");
+          const { worker } = await import("@/mocks/browser");
           worker.start();
         })();
       }
