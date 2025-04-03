@@ -8,9 +8,10 @@ export const PUBLIC_STATUS_TYPE = {
 
 export type IsPublic = keyof typeof PUBLIC_STATUS_TYPE;
 
-export interface Board {
+export type Board = {
+  id: string;
   title: string;
   isPublic: IsPublic;
   pins: Pin[];
   updatedAt: Date;
-}
+};
