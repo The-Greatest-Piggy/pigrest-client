@@ -8,6 +8,7 @@ interface InputProps {
   type?: string;
   className?: string;
   step?: string;
+  disabled?: boolean;
 }
 
 const Input: React.FC<InputProps> = ({
@@ -18,6 +19,7 @@ const Input: React.FC<InputProps> = ({
   type,
   className,
   step,
+  disabled,
 }) => {
   return (
     <div className="relative">
@@ -27,6 +29,7 @@ const Input: React.FC<InputProps> = ({
         type={type}
         step={step}
         onChange={onChange}
+        disabled={disabled}
         className={`
           block
           rounded-lg
@@ -41,12 +44,13 @@ const Input: React.FC<InputProps> = ({
           focus:outline-none
           focus:ring-0
           peer
+          ${disabled ? 'bg-gray-100 cursor-not-allowed' : ''}
           ${className || ""}
         `}
         placeholder=""
       />
       <label
-        className="
+        className={`
           absolute
           text-md
           text-zinc-400
@@ -62,7 +66,8 @@ const Input: React.FC<InputProps> = ({
           peer-placeholder-shown:translate-y-0 
           peer-focus:scale-75 
           peer-focus:-translate-y-3
-        "
+          ${disabled ? 'text-gray-400' : ''}
+        `}
         htmlFor={id}
       >
         {label}

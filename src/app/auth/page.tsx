@@ -4,6 +4,10 @@ import Input from "@/components/common/Input";
 import { useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { observer } from 'mobx-react-lite';
+import { useStore } from '@/providers/StoreProvider';
+import { authService } from '@/services/auth';
+import { AxiosError } from 'axios';
 
 interface FormInputProps {
   userId: string;
@@ -21,15 +25,38 @@ const passwordValidation = {
   validSpecialCharsOnly: /^[A-Za-z0-9!@#$%^&*]*$/,
 };
 
-const Auth = () => {
+const Auth = observer(() => {
   const { handleSubmit, control, reset, formState } = useForm<FormInputProps>();
-
-  const onSubmit: SubmitHandler<FormInputProps> = (data: FormInputProps) => {
-    console.log("data: ", data);
-  };
-
+  const { authStore } = useStore();
   const router = useRouter();
   const [variant, setVariant] = useState<"login" | "register">("login");
+
+  const onSubmit: SubmitHandler<FormInputProps> = async (data: FormInputProps) => {
+    try {
+      authStore.setLoading(true);
+      authStore.setError(null);
+
+      if (variant === "login") {
+        const response = await authService.login(data.userId, data.password);
+        if (response.data?.accessToken) {
+          authStore.setAccessToken(response.data.accessToken);
+          authStore.setUser(response.data.username);
+          router.push('/');
+        }
+      } else {
+        // TODO: 회원가입 API 연동
+        console.log("회원가입:", data);
+      }
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        authStore.setError(error.response?.data?.message || '처리 중 오류가 발생했습니다.');
+      } else {
+        authStore.setError('처리 중 오류가 발생했습니다.');
+      }
+    } finally {
+      authStore.setLoading(false);
+    }
+  };
 
   const toggleVariant = useCallback(() => {
     setVariant((prev) => (prev === "login" ? "register" : "login"));
@@ -40,9 +67,8 @@ const Auth = () => {
   useEffect(() => {
     if (formState.isSubmitSuccessful) {
       reset();
-      router.push("/");
     }
-  }, [formState, reset, router]);
+  }, [formState, reset]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -53,6 +79,10 @@ const Auth = () => {
               <p className="text-black text-4xl mb-8 font-semibold">
                 {variant === "login" ? "로그인" : "회원가입"}
               </p>
+
+              {authStore.error && (
+                <div className="text-red-500 mb-4">{authStore.error}</div>
+              )}
 
               {/* input */}
               <div className="flex flex-col gap-4">
@@ -86,6 +116,7 @@ const Auth = () => {
                         type="text"
                         onChange={field.onChange}
                         value={field.value || ""}
+                        disabled={authStore.loading}
                       />
                       {error && (
                         <span className="text-red-500 text-sm mt-1">
@@ -114,24 +145,16 @@ const Auth = () => {
                     validate: (value) => {
                       if (!value) return true;
 
-                      // 영문 대/소문자, 숫자, 특수문자 포함 여부
-                      const hasUpper =
-                        passwordValidation.hasUpperCase.test(value);
-                      const hasLower =
-                        passwordValidation.hasLowerCase.test(value);
-                      const hasNumber =
-                        passwordValidation.hasNumber.test(value);
-                      const hasSpecial =
-                        passwordValidation.hasSpecialChar.test(value);
+                      const hasUpper = passwordValidation.hasUpperCase.test(value);
+                      const hasLower = passwordValidation.hasLowerCase.test(value);
+                      const hasNumber = passwordValidation.hasNumber.test(value);
+                      const hasSpecial = passwordValidation.hasSpecialChar.test(value);
 
                       if (!hasUpper || !hasLower || !hasNumber || !hasSpecial) {
                         return "비밀번호는 영문 대/소문자, 숫자, 특수문자를 최소 1개 이상 포함해야 합니다.";
                       }
 
-                      // 허용된 특수문자로만 이루었는지 검사
-                      if (
-                        !passwordValidation.validSpecialCharsOnly.test(value)
-                      ) {
+                      if (!passwordValidation.validSpecialCharsOnly.test(value)) {
                         return "비밀번호의 특수문자는 !@#$%^&*로만 구성해야 합니다.";
                       }
 
@@ -146,6 +169,7 @@ const Auth = () => {
                         type="password"
                         onChange={field.onChange}
                         value={field.value || ""}
+                        disabled={authStore.loading}
                       />
                       {error && (
                         <span className="text-red-500 text-sm mt-1">
@@ -176,6 +200,7 @@ const Auth = () => {
                           type="password"
                           onChange={field.onChange}
                           value={field.value || ""}
+                          disabled={authStore.loading}
                         />
                         {error && (
                           <span className="text-red-500 text-sm mt-1">
@@ -217,6 +242,7 @@ const Auth = () => {
                           type="text"
                           onChange={field.onChange}
                           value={field.value || ""}
+                          disabled={authStore.loading}
                         />
                         {error && (
                           <span className="text-red-500 text-sm mt-1">
@@ -229,30 +255,25 @@ const Auth = () => {
                 )}
               </div>
 
-              {/* login/register button */}
               <button
                 type="submit"
-                // FIXME: 나중에 로직 붙이고 나서 onClick 수정할 것
-                className="bg-pink-400 hover:bg-pink-600 py-3 text-white text-lg font-bold rounded-md w-full mt-10 transition"
+                disabled={authStore.loading}
+                className="bg-pink-400 hover:bg-pink-600 py-3 text-white text-lg font-bold rounded-md w-full mt-10 transition disabled:bg-pink-300"
               >
-                {variant === "login" ? "Let's Pig!" : "Start Pigrest!"}
+                {authStore.loading
+                  ? "처리 중..."
+                  : variant === "login"
+                  ? "Let's Pig!"
+                  : "Start Pigrest!"}
               </button>
 
-              {/* footer */}
               <p className="text-neutral-500 mt-4 text-sm text-end">
                 {variant === "login"
                   ? "아직 회원이 아니신가요?"
                   : "이미 계정이 있으신가요?"}
                 <span
                   onClick={toggleVariant}
-                  className="
-              text-[#60BAAD]
-              font-bold
-              ml-2
-              hover:underline
-              hover:text-[#4f998e]
-              cursor-pointer
-            "
+                  className="text-[#60BAAD] font-bold ml-2 hover:underline hover:text-[#4f998e] cursor-pointer"
                 >
                   {variant === "login" ? "회원가입" : "로그인"}
                 </span>
@@ -263,6 +284,6 @@ const Auth = () => {
       </div>
     </form>
   );
-};
+});
 
 export default Auth;
