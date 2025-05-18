@@ -2,8 +2,6 @@ import { makeAutoObservable } from 'mobx';
 
 class AuthStore {
   accessToken: string | null = null;
-  loading: boolean = false;
-  error: string | null = null;
   user: { username: string } | null = null;
   isInitialized = false;
 
@@ -25,18 +23,9 @@ class AuthStore {
     this.user = username ? { username } : null;
   };
 
-  setLoading = (loading: boolean) => {
-    this.loading = loading;
-  };
-
-  setError = (error: string | null) => {
-    this.error = error;
-  };
-
   reset = () => {
     this.setAccessToken(null);
     this.setUser(null);
-    this.setError(null);
   };
 }
 

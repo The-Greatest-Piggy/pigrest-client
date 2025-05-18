@@ -10,7 +10,8 @@ export default function Home() {
   useEffect(() => {
     const fetchPins = async () => {
       try {
-        const res = await fetch("/api/pins");
+        console.log("Fetching pins");
+        const res = await fetch("http://localhost:3000/api/pins");
         if (!res.ok) throw new Error("핀 목록 불러오기 실패");
 
         const data = await res.json();

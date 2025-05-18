@@ -5,9 +5,7 @@ import { useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { observer } from 'mobx-react-lite';
-import { useStore } from '@/providers/StoreProvider';
-import { authService } from '@/services/auth';
-import { AxiosError } from 'axios';
+import { useLoginMutation } from "@/hooks/queries/auth";
 
 interface FormInputProps {
   userId: string;
@@ -26,35 +24,22 @@ const passwordValidation = {
 };
 
 const Auth = observer(() => {
-  const { handleSubmit, control, reset, formState } = useForm<FormInputProps>();
-  const { authStore } = useStore();
-  const router = useRouter();
   const [variant, setVariant] = useState<"login" | "register">("login");
+  const router = useRouter();
+
+  const { handleSubmit, control, reset, formState } = useForm<FormInputProps>();
+  const { mutate: login, isPending: isLoginLoading, error: loginError } = useLoginMutation();
 
   const onSubmit: SubmitHandler<FormInputProps> = async (data: FormInputProps) => {
-    try {
-      authStore.setLoading(true);
-      authStore.setError(null);
-
-      if (variant === "login") {
-        const response = await authService.login(data.userId, data.password);
-        if (response.data?.accessToken) {
-          authStore.setAccessToken(response.data.accessToken);
-          authStore.setUser(response.data.username);
+    if (variant === "login") {
+      login({ username: data.userId, password: data.password }, {
+        onSuccess: () => {
           router.push('/');
         }
-      } else {
-        // TODO: 회원가입 API 연동
-        console.log("회원가입:", data);
-      }
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        authStore.setError(error.response?.data?.message || '처리 중 오류가 발생했습니다.');
-      } else {
-        authStore.setError('처리 중 오류가 발생했습니다.');
-      }
-    } finally {
-      authStore.setLoading(false);
+      });
+    } else {
+      // TODO: 회원가입 API 연동
+      console.log("회원가입:", data);
     }
   };
 
@@ -80,8 +65,8 @@ const Auth = observer(() => {
                 {variant === "login" ? "로그인" : "회원가입"}
               </p>
 
-              {authStore.error && (
-                <div className="text-red-500 mb-4">{authStore.error}</div>
+              {loginError && (
+                <div className="text-red-500 mb-4">{loginError.response?.data.message}</div>
               )}
 
               {/* input */}
@@ -116,7 +101,7 @@ const Auth = observer(() => {
                         type="text"
                         onChange={field.onChange}
                         value={field.value || ""}
-                        disabled={authStore.loading}
+                        disabled={isLoginLoading}
                       />
                       {error && (
                         <span className="text-red-500 text-sm mt-1">
@@ -169,7 +154,7 @@ const Auth = observer(() => {
                         type="password"
                         onChange={field.onChange}
                         value={field.value || ""}
-                        disabled={authStore.loading}
+                        disabled={isLoginLoading}
                       />
                       {error && (
                         <span className="text-red-500 text-sm mt-1">
@@ -200,7 +185,7 @@ const Auth = observer(() => {
                           type="password"
                           onChange={field.onChange}
                           value={field.value || ""}
-                          disabled={authStore.loading}
+                          disabled={isLoginLoading}
                         />
                         {error && (
                           <span className="text-red-500 text-sm mt-1">
@@ -242,7 +227,7 @@ const Auth = observer(() => {
                           type="text"
                           onChange={field.onChange}
                           value={field.value || ""}
-                          disabled={authStore.loading}
+                          disabled={isLoginLoading}
                         />
                         {error && (
                           <span className="text-red-500 text-sm mt-1">
@@ -257,14 +242,14 @@ const Auth = observer(() => {
 
               <button
                 type="submit"
-                disabled={authStore.loading}
+                disabled={isLoginLoading}
                 className="bg-pink-400 hover:bg-pink-600 py-3 text-white text-lg font-bold rounded-md w-full mt-10 transition disabled:bg-pink-300"
               >
-                {authStore.loading
+                {isLoginLoading
                   ? "처리 중..."
                   : variant === "login"
-                  ? "Let's Pig!"
-                  : "Start Pigrest!"}
+                    ? "Let's Pig!"
+                    : "Start Pigrest!"}
               </button>
 
               <p className="text-neutral-500 mt-4 text-sm text-end">

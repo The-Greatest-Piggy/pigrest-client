@@ -4,7 +4,7 @@ import { useEffect } from "react";
 
 export const MswComponent = () => {
   useEffect(() => {
-    if (process.env.NODE_ENV === "development") {
+    if (process.env.NEXT_PUBLIC_API_MOCKING === "enabled") {
       if (typeof window === "undefined") {
         (async () => {
           const { server } = await import("@/mocks/server");
@@ -12,6 +12,7 @@ export const MswComponent = () => {
         })();
       } else {
         (async () => {
+          console.log("Start Worker");
           const { worker } = await import("@/mocks/browser");
           worker.start();
         })();
