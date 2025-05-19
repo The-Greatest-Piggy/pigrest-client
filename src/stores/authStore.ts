@@ -3,14 +3,11 @@ import { makeAutoObservable } from 'mobx';
 class AuthStore {
   accessToken: string | null = null;
   user: { username: string } | null = null;
-  isInitialized = false;
 
   constructor() {
     makeAutoObservable(this);
-    this.isInitialized = true;
   }
 
-  // computed 값
   get isAuthenticated() {
     return !!this.accessToken;
   }

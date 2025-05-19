@@ -1,4 +1,3 @@
-import { AxiosError } from 'axios';
 import api, { ApiResponse } from '../api/axios';
 
 // Request Types

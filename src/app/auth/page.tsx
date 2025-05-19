@@ -1,8 +1,8 @@
 "use client";
 
 import Input from "@/components/common/Input";
-import { useRouter } from "next/navigation";
-import React, { useCallback, useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import React, { useCallback, useEffect } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { observer } from 'mobx-react-lite';
 import { useLoginMutation } from "@/hooks/queries/auth";
@@ -24,14 +24,16 @@ const passwordValidation = {
 };
 
 const Auth = observer(() => {
-  const [variant, setVariant] = useState<"login" | "register">("login");
+  const searchParams = useSearchParams();
+  const authMode = searchParams.get("mode") as "login" | "register";
+
   const router = useRouter();
 
   const { handleSubmit, control, reset, formState } = useForm<FormInputProps>();
   const { mutate: login, isPending: isLoginLoading, error: loginError } = useLoginMutation();
 
   const onSubmit: SubmitHandler<FormInputProps> = async (data: FormInputProps) => {
-    if (variant === "login") {
+    if (authMode === "login") {
       login({ username: data.userId, password: data.password }, {
         onSuccess: () => {
           router.push('/');
@@ -43,11 +45,12 @@ const Auth = observer(() => {
     }
   };
 
-  const toggleVariant = useCallback(() => {
-    setVariant((prev) => (prev === "login" ? "register" : "login"));
-    // reset form
-    reset();
-  }, [reset]);
+  const toggleAuthMode = useCallback(() => {
+    const newMode = authMode === 'login' ? 'register' : 'login';
+    const currentPath = window.location.pathname;
+    router.push(`${currentPath}?mode=${newMode}`);
+    reset(); // reset form
+  }, [authMode, reset, router]);
 
   useEffect(() => {
     if (formState.isSubmitSuccessful) {
@@ -62,7 +65,7 @@ const Auth = observer(() => {
           <div className="flex justify-center">
             <div className="px-16 py-16 self-center mt-2 lg:w-3/5 lg:max-w-xl rounded-md w-full">
               <p className="text-black text-4xl mb-8 font-semibold">
-                {variant === "login" ? "로그인" : "회원가입"}
+                {authMode === "login" ? "로그인" : "회원가입"}
               </p>
 
               {loginError && (
@@ -166,7 +169,7 @@ const Auth = observer(() => {
                 />
 
                 {/* confirm password */}
-                {variant === "register" && (
+                {authMode === "register" && (
                   <Controller
                     name="confirmPassword"
                     control={control}
@@ -198,7 +201,7 @@ const Auth = observer(() => {
                 )}
 
                 {/* username */}
-                {variant === "register" && (
+                {authMode === "register" && (
                   <Controller
                     name="username"
                     control={control}
@@ -247,20 +250,20 @@ const Auth = observer(() => {
               >
                 {isLoginLoading
                   ? "처리 중..."
-                  : variant === "login"
+                  : authMode === "login"
                     ? "Let's Pig!"
                     : "Start Pigrest!"}
               </button>
 
               <p className="text-neutral-500 mt-4 text-sm text-end">
-                {variant === "login"
+                {authMode === "login"
                   ? "아직 회원이 아니신가요?"
                   : "이미 계정이 있으신가요?"}
                 <span
-                  onClick={toggleVariant}
+                  onClick={toggleAuthMode}
                   className="text-[#60BAAD] font-bold ml-2 hover:underline hover:text-[#4f998e] cursor-pointer"
                 >
-                  {variant === "login" ? "회원가입" : "로그인"}
+                  {authMode === "login" ? "회원가입" : "로그인"}
                 </span>
               </p>
             </div>

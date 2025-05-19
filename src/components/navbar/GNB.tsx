@@ -2,8 +2,7 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
-import { authStore } from "@/stores/authStore";
+import ProfileAvatar from "./ProfileAvatar";
 
 const GNB = () => {
   return (
@@ -27,30 +26,7 @@ const GNB = () => {
       </div>
 
       {/* profile avatar */}
-      {
-        authStore.isAuthenticated ? (
-          <Link href={"/profile"}>
-            <Avatar className="hover:cursor-pointer w-10 h-10 flex items-center justify-center">
-              <AvatarImage
-                className="rounded-full"
-                src="https://github.com/shadcn.png"
-                alt="avatar"
-              />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
-          </Link>
-        ) : (
-          <div className="min-w-max ml-2 flex gap-2">
-            <Link href={"/auth"} className="text-sm bg-pink-300 hover:bg-pink-400 transition-colors duration-500 eaes-in-out p-2 rounded-md">
-              로그인
-            </Link>
-            <Link href={"/auth"} className="text-sm bg-gray-100 hover:bg-gray-200 transition-colors duration-500 ease-in-out p-2 rounded-md">
-              회원가입
-            </Link>
-          </div>
-        )
-      }
-
+      <ProfileAvatar />
     </div>
   );
 };
