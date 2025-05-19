@@ -5,12 +5,12 @@ import { useRouter, useSearchParams } from "next/navigation";
 import React, { useCallback, useEffect } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { observer } from 'mobx-react-lite';
-import { useLoginMutation } from "@/hooks/queries/auth";
+import { useLoginMutation, useRegisterMutation } from "@/hooks/queries/auth";
 
 interface FormInputProps {
   userId: string;
   password: string;
-  confirmPassword: string;
+  passwordConfirm: string;
   username: string;
 }
 
@@ -31,6 +31,7 @@ const Auth = observer(() => {
 
   const { handleSubmit, control, reset, formState } = useForm<FormInputProps>();
   const { mutate: login, isPending: isLoginLoading, error: loginError } = useLoginMutation();
+  const { mutate: register, isPending: isRegisterLoading, error: registerError } = useRegisterMutation();
 
   const onSubmit: SubmitHandler<FormInputProps> = async (data: FormInputProps) => {
     if (authMode === "login") {
@@ -40,8 +41,11 @@ const Auth = observer(() => {
         }
       });
     } else {
-      // TODO: 회원가입 API 연동
-      console.log("회원가입:", data);
+      register({ username: data.userId, password: data.password, passwordConfirm: data.passwordConfirm, nickname: data.username }, {
+        onSuccess: () => {
+          router.push('/auth?mode=login');
+        }
+      });
     }
   };
 
@@ -67,11 +71,6 @@ const Auth = observer(() => {
               <p className="text-black text-4xl mb-8 font-semibold">
                 {authMode === "login" ? "로그인" : "회원가입"}
               </p>
-
-              {loginError && (
-                <div className="text-red-500 mb-4">{loginError.response?.data.message}</div>
-              )}
-
               {/* input */}
               <div className="flex flex-col gap-4">
                 {/* userId */}
@@ -104,7 +103,7 @@ const Auth = observer(() => {
                         type="text"
                         onChange={field.onChange}
                         value={field.value || ""}
-                        disabled={isLoginLoading}
+                        disabled={isLoginLoading || isRegisterLoading}
                       />
                       {error && (
                         <span className="text-red-500 text-sm mt-1">
@@ -157,7 +156,7 @@ const Auth = observer(() => {
                         type="password"
                         onChange={field.onChange}
                         value={field.value || ""}
-                        disabled={isLoginLoading}
+                        disabled={isLoginLoading || isRegisterLoading}
                       />
                       {error && (
                         <span className="text-red-500 text-sm mt-1">
@@ -171,7 +170,7 @@ const Auth = observer(() => {
                 {/* confirm password */}
                 {authMode === "register" && (
                   <Controller
-                    name="confirmPassword"
+                    name="passwordConfirm"
                     control={control}
                     defaultValue=""
                     rules={{
@@ -183,12 +182,12 @@ const Auth = observer(() => {
                     render={({ field, fieldState: { error } }) => (
                       <div>
                         <Input
-                          id="confirmPassword"
+                          id="passwordConfirm"
                           label="비밀번호를 다시 한번 입력해주세요."
                           type="password"
                           onChange={field.onChange}
                           value={field.value || ""}
-                          disabled={isLoginLoading}
+                          disabled={isLoginLoading || isRegisterLoading}
                         />
                         {error && (
                           <span className="text-red-500 text-sm mt-1">
@@ -230,7 +229,7 @@ const Auth = observer(() => {
                           type="text"
                           onChange={field.onChange}
                           value={field.value || ""}
-                          disabled={isLoginLoading}
+                          disabled={isLoginLoading || isRegisterLoading}
                         />
                         {error && (
                           <span className="text-red-500 text-sm mt-1">
@@ -243,9 +242,16 @@ const Auth = observer(() => {
                 )}
               </div>
 
+              {loginError && (
+                <div className="text-red-500 mt-4">{loginError.response?.data.message}</div>
+              )}
+              {registerError && (
+                <div className="text-red-500 mt-4">{registerError.response?.data.message}</div>
+              )}
+
               <button
                 type="submit"
-                disabled={isLoginLoading}
+                disabled={isLoginLoading || isRegisterLoading}
                 className="bg-pink-400 hover:bg-pink-600 py-3 text-white text-lg font-bold rounded-md w-full mt-10 transition disabled:bg-pink-300"
               >
                 {isLoginLoading
@@ -267,6 +273,7 @@ const Auth = observer(() => {
                 </span>
               </p>
             </div>
+            
           </div>
         </div>
       </div>

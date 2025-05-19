@@ -2,7 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { authService } from "@/api/auth";
 import { useStore } from "@/providers/StoreProvider";
 import { AxiosError } from "axios";
-import { LoginRequest, LoginResponse } from "@/api/auth";
+import { LoginRequest, LoginResponse, RegisterRequest, RegisterResponse } from "@/api/auth";
 import { ApiResponse } from "@/api/axios";
 
 export const useLoginMutation = () => {
@@ -22,5 +22,14 @@ export const useLoginMutation = () => {
             onError: (error) => {
                 console.log(error.response?.data.message);
             }
+        });
+}
+
+export const useRegisterMutation = () => {
+    return useMutation<
+        ApiResponse<RegisterResponse>,
+        AxiosError<ApiResponse<null>>,
+        RegisterRequest>({
+            mutationFn: (request: RegisterRequest) => authService.register(request),
         });
 }
